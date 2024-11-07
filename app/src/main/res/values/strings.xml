@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PermissionChecker</string>
+
+    <string name="main_title">Permission Checker Title</string>
+</resources>
