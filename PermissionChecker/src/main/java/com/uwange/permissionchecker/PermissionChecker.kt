@@ -1,17 +1,70 @@
 package com.uwange.permissionchecker
 
-import android.content.Context
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.BLUETOOTH
+import android.Manifest.permission.BLUETOOTH_SCAN
+import android.app.Activity
+import android.content.Intent
+import android.os.Build
+import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.uwange.permissionchecker.Type.*
+
+enum class Type {
+    Location,
+    Bluetooth, BluetoothScan, BluetoothAdmin, BluetoothConnect, BluetoothAdvertise
+
+}
 
 class PermissionChecker(
-    private val context: Context
+    private val activity: Activity
 ) {
     companion object {
         val a = ""
-    }
-
-    fun checker() {
 
     }
+
+    private var launcher: ActivityResultLauncher<Array<String>>? = null
+
+
+    fun result(callback: () -> Unit) {
+        launcher = (activity as AppCompatActivity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (permissions[BLUETOOTH] == true &&
+                    permissions[BLUETOOTH_SCAN] == true &&
+                    permissions[ACCESS_FINE_LOCATION] == true) {
+                    Log.d("여기1", permissions.toString())
+                    Log.d("여기1", permissions.keys.toString())
+                }
+            } else {
+                if (permissions[BLUETOOTH] == true &&
+                    permissions[ACCESS_FINE_LOCATION] == true) {
+                    Log.d("여기1", permissions.toString())
+                    Log.d("여기1", permissions.keys.toString())
+                }
+            }
+        }
+    }
+
+    fun request(type: Type) {
+        when (type) {
+            Bluetooth, BluetoothScan, BluetoothAdmin, BluetoothConnect, BluetoothAdvertise -> {
+                Bluetooth(
+                    activity,
+                    type,
+                    launcher
+                ) {
+                    Log.d("여기", it.message.toString())
+                }
+            }
+            else -> {}
+        }
+    }
+
+
 //    private var overlayResultLauncher: ActivityResultLauncher<Intent>? = null
 //
 //    override fun onCreate(savedInstanceState: Bundle?) {
