@@ -2,47 +2,25 @@ package com.uwange.permissionchecker
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.app.Activity
-import android.content.pm.PackageManager.PERMISSION_GRANTED
-import androidx.activity.result.ActivityResultLauncher
 
 internal class Location(
-private val type: Type
-) {
+    private val type: Type
+): PermissionCheckAndRequest(type) {
 
-    fun request(
-        activity: Activity,
-        launcher: ActivityResultLauncher<Array<String>>?,
-        callBack: (Response) -> Unit
-    ) {
-        when (type) {
-            Type.Location -> {
-                val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-
-                val isPermissionGranted = permissions.all {
-                    activity.checkSelfPermission(it) == PERMISSION_GRANTED
-                }
-                if (!isPermissionGranted)
-                    launcher?.launch((permissions))
-                else
-                    callBack(Response(true, "$type Permission Already Granted", type))
-            }
-            else -> {
-            }
+    override fun getPermissions(): Array<String> {
+        return when (type) {
+            Type.Location -> arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+            else -> emptyArray()
         }
     }
 
-    fun checkGrant(permissions: Map<String, Boolean>): Response {
+    override fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean? {
         return when (type) {
             Type.Location -> {
-                val isGranted =
-                    (permissions[ACCESS_FINE_LOCATION] == true &&
-                            permissions[ACCESS_COARSE_LOCATION] == true)
-                Response(isGranted, "$type Permission ${if (isGranted) "Granted" else "Denied"}", type)
+                permissions[ACCESS_FINE_LOCATION] == true &&
+                        permissions[ACCESS_COARSE_LOCATION] == true
             }
-            else -> {
-                Response(true, "")
-            }
+            else -> null
         }
     }
 }

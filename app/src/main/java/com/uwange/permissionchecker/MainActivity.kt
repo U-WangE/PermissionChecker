@@ -28,14 +28,12 @@ class MainActivity : AppCompatActivity() {
         val bluetoothPermission = BluetoothPermission(this)
         val locationPermission = LocationPermission(this)
 
-
         bluetoothPermission.result {
             Log.d("BLUETOOTH", it.toString())
             locationPermission.request(Type.Location)
         }
         locationPermission.result {
             Log.d("LOCATION", it.toString())
-            bluetoothPermission.request(Type.BluetoothScan)
         }
         binding.permission1.root.setOnClickListener {
             selectMasking(binding.permission1, Type.Location)

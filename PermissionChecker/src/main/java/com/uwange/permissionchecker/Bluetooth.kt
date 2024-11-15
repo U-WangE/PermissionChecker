@@ -7,47 +7,12 @@ import android.Manifest.permission.BLUETOOTH_ADMIN
 import android.Manifest.permission.BLUETOOTH_ADVERTISE
 import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.Manifest.permission.BLUETOOTH_SCAN
-import android.app.Activity
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
-import androidx.activity.result.ActivityResultLauncher
 
 internal class Bluetooth(
     private val type: Type
-) {
-
-    fun request(
-        activity: Activity,
-        launcher: ActivityResultLauncher<Array<String>>,
-        callBack: (Response) -> Unit
-    ) {
-        val permissions: Array<String> = getPermissions(type)
-
-        if (permissions.isEmpty()) {
-            callBack(Response(false, "$type Permission Type Miss Match", type))
-            return
-        }
-
-        val isPermissionGranted = permissions.all {
-            activity.checkSelfPermission(it) == PERMISSION_GRANTED
-        }
-
-        if (isPermissionGranted)
-            callBack(Response(true, "$type Permission Already Granted", type))
-        else
-            launcher.launch((permissions))
-    }
-
-    fun checkGrant(permissions: Map<String, Boolean>): Response {
-        val isGranted: Boolean =
-            isPermissionsGranted(permissions, type)?: let {
-                return Response(false, "$type Permission Type Miss Match", type)
-            }
-
-        return Response(isGranted, "$type Permission ${if (isGranted) "Granted" else "Denied"}", type)
-    }
-
-    private fun getPermissions(type: Type): Array<String> {
+): PermissionCheckAndRequest(type) {
+    override fun getPermissions(): Array<String> {
         return when (type) {
             Type.Bluetooth -> arrayOf(BLUETOOTH)
             Type.BluetoothScan -> {
@@ -72,13 +37,13 @@ internal class Bluetooth(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADVERTISE)
                 else
-                    arrayOf(BLUETOOTH, BLUETOOTH_ADMIN)
+                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH, BLUETOOTH_ADMIN)
             }
             else -> emptyArray()
         }
     }
 
-    private fun isPermissionsGranted(permissions: Map<String, Boolean>, type: Type): Boolean? {
+    override fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean? {
         return when (type) {
             Type.Bluetooth -> permissions[BLUETOOTH] == true
             Type.BluetoothScan -> {
