@@ -52,7 +52,7 @@ abstract class PermissionChecker(
 ) {
     private var launcher: ActivityResultLauncher<Array<String>>
 
-    var resultLiveData: MutableLiveData<Response>? = MutableLiveData()
+    internal var resultLiveData: MutableLiveData<Response>? = MutableLiveData()
 
     private var callback: ((Response) -> Unit)? = null
 
