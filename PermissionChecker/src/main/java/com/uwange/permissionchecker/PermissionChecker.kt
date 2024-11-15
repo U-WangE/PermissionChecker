@@ -11,7 +11,6 @@ enum class Type {
     Bluetooth, BluetoothScan, BluetoothConnect, BluetoothAdvertise, BluetoothALL
 }
 
-
 class BluetoothPermission(private val activity: AppCompatActivity): PermissionChecker(activity) {
     private var bluetooth: Bluetooth? = null
 
