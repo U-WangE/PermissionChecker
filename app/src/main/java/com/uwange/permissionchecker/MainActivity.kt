@@ -6,6 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.uwange.permissionchecker.databinding.ActivityMainBinding
 import com.uwange.permissionchecker.databinding.IncludeItemBinding
+import com.uwange.permissionchecker.manager.BluetoothPermission
+import com.uwange.permissionchecker.manager.LocationPermission
+import com.uwange.permissionchecker.Type
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -27,36 +30,26 @@ class MainActivity : AppCompatActivity() {
 
     fun setUI() {
         with(binding) {
-            val permissionViews: Array<IncludeItemBinding> = arrayOf(
-                permission1,
-                permission2,
-                permission3,
-                permission4,
-                permission5,
-                permission6,
-                permission7,
-                permission8
-            )
+            val permissionViews: Array<Triple<IncludeItemBinding, String, Type?>> =
+                arrayOf(
+                    Triple(permission1, "Location Permission", LocationType.Location),
+                    Triple(permission2, "Bluetooth Permission", BluetoothType.Bluetooth),
+                    Triple(permission3, "Bluetooth Scan Permission", BluetoothType.BluetoothScan),
+                    Triple(permission4, "Bluetooth Connect Permission", BluetoothType.BluetoothConnect),
+                    Triple(permission5, "Bluetooth Advertise Permission", BluetoothType.BluetoothAdvertise),
+                    Triple(permission6, "BluetoothALL Permission", BluetoothType.BluetoothALL),
+                    Triple(permission7, "- Permission", null),
+                    Triple(permission8, "- Permission", null)
+                )
 
-            val textTitles = arrayOf(
-                "Location Permission",
-                "Bluetooth Permission",
-                "Bluetooth Scan Permission",
-                "Bluetooth Connect Permission",
-                "Bluetooth Advertise Permission",
-                "- Permission",
-                "- Permission",
-                "- Permission"
-            )
-
-            permissionViews.forEachIndexed { index, view ->
+            permissionViews.forEachIndexed { index, triple ->
                 try {
-                    view.tvName.text = textTitles[index]
-                    view.root.setOnClickListener {
+                    triple.first.tvName.text = triple.second
+                    triple.first.root.setOnClickListener {
                         if (index == 0) {
-                            selectMasking(view, Type.Location)
-                        } else if (index >= 1 && index <= 4) {
-                            selectMasking(view, Type.Bluetooth)
+                            selectMasking(triple.first, triple.third)
+                        } else if (index >= 1 && index <= 5) {
+                            selectMasking(triple.first, triple.third)
                         }else {}
                     }
                 } catch (e:Exception) {
@@ -72,29 +65,36 @@ class MainActivity : AppCompatActivity() {
 
         bluetoothPermission.result {
             Log.d("BLUETOOTH", it.toString())
+            bluetoothType = null
+
             locationType?.let {
                 locationPermission.request(it)
             }
         }
         locationPermission.result {
             Log.d("LOCATION", it.toString())
-            locationType?.let {
+            locationType = null
+
+            bluetoothType?.let {
                 bluetoothPermission.request(it)
             }
         }
+
 
         binding.btnRequest.setOnClickListener {
             bluetoothType?.let {
-                bluetoothType = null
                 bluetoothPermission.request(it)
             }?: locationType?.let {
-                locationType = null
                 locationPermission.request(it)
             }
+            bluetoothSelectedView?.isSelected = false
+            locationSelectedView?.isSelected = false
+            bluetoothSelectedView = null
+            locationSelectedView = null
         }
     }
 
-    fun selectMasking(view: IncludeItemBinding, type: Type) {
+    fun selectMasking(view: IncludeItemBinding, type: Type?) {
         if (!view.tvNumber.isSelected) {
             view.tvNumber.isSelected = true
         } else {
@@ -102,15 +102,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         when (type) {
-            Type.Location -> {
-                locationSelectedView?.isSelected = false
+            is LocationType -> {
+                if (locationSelectedView != view.tvNumber)
+                    locationSelectedView?.isSelected = false
+
                 locationSelectedView = view.tvNumber
-                locationType = Type.Location
+                locationType = type
             }
-            Type.Bluetooth -> {
-                bluetoothSelectedView?.isSelected = false
+            is BluetoothType -> {
+                if (bluetoothSelectedView != view.tvNumber)
+                    bluetoothSelectedView?.isSelected = false
+
                 bluetoothSelectedView = view.tvNumber
-                bluetoothType = Type.Bluetooth
+                bluetoothType = type
             }
             else -> return
         }

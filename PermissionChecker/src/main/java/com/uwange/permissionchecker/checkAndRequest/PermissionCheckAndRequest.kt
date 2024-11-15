@@ -1,8 +1,10 @@
-package com.uwange.permissionchecker
+package com.uwange.permissionchecker.checkAndRequest
 
 import android.app.Activity
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.activity.result.ActivityResultLauncher
+import com.uwange.permissionchecker.Response
+import com.uwange.permissionchecker.Type
 
 abstract class PermissionCheckAndRequest(
     private val type: Type
