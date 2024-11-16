@@ -3,7 +3,7 @@ package com.uwange.permissionchecker.checkAndRequest
 import android.app.Activity
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.activity.result.ActivityResultLauncher
-import com.uwange.permissionchecker.Response
+import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 
 abstract class PermissionCheckAndRequest(
@@ -15,11 +15,11 @@ abstract class PermissionCheckAndRequest(
     open fun request(
         activity: Activity,
         launcher: ActivityResultLauncher<Array<String>>,
-        callBack: (Response) -> Unit
+        callBack: (PermissionResponse) -> Unit
     ) {
         val permissions = getPermissions()
         if (permissions.isEmpty()) {
-            callBack(Response(false, "$type Permission Type Miss Match", type))
+            callBack(PermissionResponse(false, "$type Permission Type Miss Match", type))
             return
         }
 
@@ -28,17 +28,29 @@ abstract class PermissionCheckAndRequest(
         }
 
         if (isPermissionGranted)
-            callBack(Response(true, "$type Permission Already Granted", type))
+            callBack(PermissionResponse(true, "$type Permission Already Granted", type, permissions.toList()))
         else
             launcher.launch((permissions))
     }
 
-    open fun checkGrant(permissions: Map<String, Boolean>): Response {
+    open fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
         val isGranted = isPermissionsGranted(permissions)
+        val grantedPermissions = getGrantedPermissions(permissions)
+        val deniedPermissions = getDeniedPermissions(permissions)
 
         return if (isGranted == null)
-            Response(false, "$type Permission Type Miss Match", type)
+            PermissionResponse(false, "$type Permission Type Miss Match", type, grantedPermissions, deniedPermissions)
+        else if (isGranted)
+            PermissionResponse(isGranted, "$type Permission Granted", type, grantedPermissions, deniedPermissions)
         else
-            Response(isGranted, "$type Permission ${if (isGranted) "Granted" else "Denied"}", type)
+            PermissionResponse(isGranted, "$type Permission Denied", type, grantedPermissions, deniedPermissions)
+    }
+
+    private fun getDeniedPermissions(permissions: Map<String, Boolean>): List<String> {
+        return permissions.filter { !it.value }.map { it.key }
+    }
+
+    private fun getGrantedPermissions(permissions: Map<String, Boolean>): List<String> {
+        return permissions.filter { it.value }.map { it.key }
     }
 }

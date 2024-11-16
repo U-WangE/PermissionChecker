@@ -5,7 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.uwange.permissionchecker.Response
+import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 
 abstract class PermissionChecker(
@@ -13,12 +13,12 @@ abstract class PermissionChecker(
 ) {
     private var launcher: ActivityResultLauncher<Array<String>>
 
-    internal var resultLiveData: MutableLiveData<Response>? = MutableLiveData()
+    internal var resultLiveData: MutableLiveData<PermissionResponse>? = MutableLiveData()
 
-    private var callback: ((Response) -> Unit)? = null
+    private var callback: ((PermissionResponse) -> Unit)? = null
 
-    private val resultObserver:  Observer<Response> = Observer {
-        callback?.invoke(resultLiveData?.value?: Response(false, ""))
+    private val resultObserver:  Observer<PermissionResponse> = Observer {
+        callback?.invoke(resultLiveData?.value?: PermissionResponse(false, "result error"))
     }
 
     init {
@@ -27,10 +27,10 @@ abstract class PermissionChecker(
         }
     }
 
-    internal abstract fun checkGrant(permissions: Map<String, Boolean>): Response
+    internal abstract fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse
     internal abstract fun requestPermissions(type: Type, launcher: ActivityResultLauncher<Array<String>>)
 
-    open fun result(callback: (Response) -> Unit) {
+    open fun result(callback: (PermissionResponse) -> Unit) {
         this.callback = callback
 
         resultLiveData?.observe(activity, resultObserver)
