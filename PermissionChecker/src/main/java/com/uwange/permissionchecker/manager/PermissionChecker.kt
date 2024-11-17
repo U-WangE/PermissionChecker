@@ -11,6 +11,7 @@ import com.uwange.permissionchecker.Type
 abstract class PermissionChecker(
     private val activity: AppCompatActivity
 ) {
+
     private var launcher: ActivityResultLauncher<Array<String>>
 
     internal var resultLiveData: MutableLiveData<PermissionResponse>? = MutableLiveData()
@@ -31,12 +32,14 @@ abstract class PermissionChecker(
     internal abstract fun requestPermissions(type: Type, launcher: ActivityResultLauncher<Array<String>>)
 
     open fun result(callback: (PermissionResponse) -> Unit) {
+        //TODO:: result에서 2번 이상 거절 했는지 판단
         this.callback = callback
 
         resultLiveData?.observe(activity, resultObserver)
     }
 
     open fun request(type: Type) {
+        //TODO:: 시스템 권한의 경우 해당 ActivityResultContracts.RequestMultiplePermissions() 로 권한 요청 불가
         requestPermissions(type, launcher)
     }
 

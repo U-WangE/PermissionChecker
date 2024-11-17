@@ -1,5 +1,6 @@
 package com.uwange.permissionchecker
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -8,7 +9,6 @@ import com.uwange.permissionchecker.databinding.ActivityMainBinding
 import com.uwange.permissionchecker.databinding.IncludeItemBinding
 import com.uwange.permissionchecker.manager.BluetoothPermission
 import com.uwange.permissionchecker.manager.LocationPermission
-import com.uwange.permissionchecker.Type
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -18,6 +18,9 @@ class MainActivity : AppCompatActivity() {
 
     private var bluetoothSelectedView: TextView? = null
     private var locationSelectedView: TextView? = null
+
+    private lateinit var bluetoothPermission: BluetoothPermission
+    private lateinit var locationPermission: LocationPermission
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +63,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun requestPermission() {
-        val bluetoothPermission = BluetoothPermission(this)
-        val locationPermission = LocationPermission(this)
+        bluetoothPermission = BluetoothPermission(this)
+        locationPermission = LocationPermission(this)
 
         bluetoothPermission.result {
             Log.d("BLUETOOTH", it.toString())
@@ -118,5 +121,24 @@ class MainActivity : AppCompatActivity() {
             }
             else -> return
         }
+    }
+
+    fun alert(callback:(Boolean) -> Unit): AlertDialog {
+        // AlertDialog 만들기
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("알림")
+            .setMessage("이것은 간단한 AlertDialog 예시입니다.")
+            .setPositiveButton("확인") { dialog, which ->
+                println("확인 버튼이 클릭되었습니다.")
+                callback(true)
+            }
+            .setNeutralButton("취소") { dialog, which ->
+                println("확인 버튼이 클릭되었습니다.")
+                callback(false)
+            }
+            .create()
+
+        // 다이얼로그 표시
+        return dialog
     }
 }

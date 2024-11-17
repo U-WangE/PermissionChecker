@@ -5,5 +5,6 @@ data class PermissionResponse(
     var message: String? = null,
     var type: Type? = null,
     var granted: List<String> = listOf(),
-    var denied: List<String> = listOf()
+    var denied: List<String> = listOf(),
+    var isDeniedMoreThanTwice: Boolean? = null
 )

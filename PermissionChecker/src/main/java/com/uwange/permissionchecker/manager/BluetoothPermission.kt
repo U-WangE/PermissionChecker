@@ -7,7 +7,9 @@ import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 import com.uwange.permissionchecker.checkAndRequest.BluetoothCheckAndRequest
 
-class BluetoothPermission(private val activity: AppCompatActivity): PermissionChecker(activity) {
+class BluetoothPermission(
+    private val activity: AppCompatActivity
+): PermissionChecker(activity) {
     private var bluetoothCheckAndRequest: BluetoothCheckAndRequest? = null
 
     override fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
@@ -22,8 +24,8 @@ class BluetoothPermission(private val activity: AppCompatActivity): PermissionCh
                 BluetoothType.BluetoothAdvertise,
                 BluetoothType.BluetoothALL
             )) {
-            bluetoothCheckAndRequest = BluetoothCheckAndRequest(type)
-            bluetoothCheckAndRequest?.request(activity, launcher) {
+            bluetoothCheckAndRequest = BluetoothCheckAndRequest(activity, type)
+            bluetoothCheckAndRequest?.request(launcher) {
                 resultLiveData?.postValue(it)
             }
         }

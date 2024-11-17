@@ -16,8 +16,8 @@ class LocationPermission(private val activity: AppCompatActivity): PermissionChe
 
     override fun requestPermissions(type: Type, launcher: ActivityResultLauncher<Array<String>>) {
         if (type in listOf(LocationType.Location)) {
-            locationCheckAndRequest = LocationCheckAndRequest(type)
-            locationCheckAndRequest?.request(activity, launcher) {
+            locationCheckAndRequest = LocationCheckAndRequest(activity, type)
+            locationCheckAndRequest?.request(launcher) {
                 resultLiveData?.postValue(it)
             }
         }

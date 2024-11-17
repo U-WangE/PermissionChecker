@@ -7,13 +7,15 @@ import android.Manifest.permission.BLUETOOTH_ADMIN
 import android.Manifest.permission.BLUETOOTH_ADVERTISE
 import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.Manifest.permission.BLUETOOTH_SCAN
+import android.app.Activity
 import android.os.Build
 import com.uwange.permissionchecker.BluetoothType
 import com.uwange.permissionchecker.Type
 
 internal class BluetoothCheckAndRequest(
+    private val activity: Activity,
     private val type: Type
-): PermissionCheckAndRequest(type) {
+): PermissionCheckAndRequest(activity, type) {
     override fun getPermissions(): Array<String> {
         return when (type) {
             BluetoothType.Bluetooth -> arrayOf(BLUETOOTH)
