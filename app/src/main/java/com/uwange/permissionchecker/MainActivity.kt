@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             val permissionViews: Array<Triple<IncludeItemBinding, String, Type?>> =
                 arrayOf(
-                    Triple(permission1, "Location Permission", LocationType.Location),
-                    Triple(permission2, "Bluetooth Permission", BluetoothType.Bluetooth),
-                    Triple(permission3, "Bluetooth Scan Permission", BluetoothType.BluetoothScan),
-                    Triple(permission4, "Bluetooth Connect Permission", BluetoothType.BluetoothConnect),
-                    Triple(permission5, "Bluetooth Advertise Permission", BluetoothType.BluetoothAdvertise),
-                    Triple(permission6, "BluetoothALL Permission", BluetoothType.BluetoothALL),
+                    Triple(permission1, "Location Permission", Type.LocationType.Location),
+                    Triple(permission2, "Bluetooth Permission", Type.BluetoothType.Bluetooth),
+                    Triple(permission3, "Bluetooth Scan Permission", Type.BluetoothType.BluetoothScan),
+                    Triple(permission4, "Bluetooth Connect Permission", Type.BluetoothType.BluetoothConnect),
+                    Triple(permission5, "Bluetooth Advertise Permission", Type.BluetoothType.BluetoothAdvertise),
+                    Triple(permission6, "BluetoothALL Permission", Type.BluetoothType.BluetoothALL),
                     Triple(permission7, "- Permission", null),
                     Triple(permission8, "- Permission", null)
                 )
@@ -105,14 +105,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         when (type) {
-            is LocationType -> {
+            is Type.LocationType -> {
                 if (locationSelectedView != view.tvNumber)
                     locationSelectedView?.isSelected = false
 
                 locationSelectedView = view.tvNumber
                 locationType = type
             }
-            is BluetoothType -> {
+            is Type.BluetoothType -> {
                 if (bluetoothSelectedView != view.tvNumber)
                     bluetoothSelectedView?.isSelected = false
 

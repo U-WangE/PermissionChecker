@@ -1,11 +1,11 @@
 package com.uwange.permissionchecker
 
-sealed interface Type
+sealed interface Type {
+    enum class BluetoothType : Type {
+        Bluetooth, BluetoothScan, BluetoothConnect, BluetoothAdvertise, BluetoothALL
+    }
 
-enum class BluetoothType: Type {
-    Bluetooth, BluetoothScan, BluetoothConnect, BluetoothAdvertise, BluetoothALL
-}
-
-enum class LocationType: Type {
-    Location
+    enum class LocationType : Type {
+        Location
+    }
 }
