@@ -1,23 +1,28 @@
 package com.uwange.permissionchecker.checkAndRequest
 
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.Uri
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import com.uwange.permissionchecker.PermissionCheckerApp.Companion.permissionCheckerPreference
 import com.uwange.permissionchecker.PermissionCheckerUtil.getDeniedPermissions
 import com.uwange.permissionchecker.PermissionCheckerUtil.getGrantedPermissions
 import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 
-abstract class PermissionCheckAndRequest(
+internal abstract class PermissionCheckAndRequest(
     private val activity: Activity,
     private val type: Type
 ) {
     internal abstract fun getPermissions(): Array<String>
     internal abstract fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean?
-
-    open fun request(
+// 권한 전체가 처음 요청 중인지 판단하는 perference만 있으면 될듯
+    internal fun request(
         launcher: ActivityResultLauncher<Array<String>>,
+        intentLauncher: ActivityResultLauncher<Intent>,
         callBack: (PermissionResponse) -> Unit
     ) {
         val permissions = getPermissions()
@@ -30,26 +35,32 @@ abstract class PermissionCheckAndRequest(
             activity.checkSelfPermission(it) == PERMISSION_GRANTED
         }
 
-        //해당 위치에서 shouldShowRequestPermissionRationale
-        // 처음 인지 판단이 필요한데 해당 판단 preference 로 처리해야 할 듯함
-        // false 인 경우 처리 해야함
-        if (isPermissionGranted)
-            callBack(PermissionResponse(true, "$type Permission Already Granted", type, permissions.toList()))
-        else
-            launcher.launch((permissions))
+        // isDeniedMoreThanTwice : "처음 요청" 또는 "2번 이상 거부시 true" 또는 "권한 전부 수락시", "처음 거부시" false,
+        val isDeniedMoreThanTwice = !permissions.all {
+            shouldShowRequestPermissionRationale(activity, it)
+        }
+
+        when {
+            isPermissionGranted -> callBack(PermissionResponse(true, "$type Permission Already Granted", type, permissions.toList()))
+
+            // 2회 이상 거부 됐고, 직전 권한 요청 방식이 Intent Launcher 가 아닌 경우 실행
+            isDeniedMoreThanTwice && !permissionCheckerPreference.checkFirstTime && !permissionCheckerPreference.lastActionIsIntentLauncher -> {
+                //TODO:: 각 권한에 따라 처리 로직 필요
+                intentLauncher.launch(Intent().apply {
+                    action = ACTION_APPLICATION_DETAILS_SETTINGS
+                    data = Uri.fromParts("package", activity.packageName, null)
+                })
+            }
+            else -> launcher.launch((permissions))
+        }
     }
 
-    open fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
+    internal fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
         val isGrantedAll = isPermissionsGranted(permissions)
         val grantedPermissions = getGrantedPermissions(permissions)
         val deniedPermissions = getDeniedPermissions(permissions)
 
         val isDeniedMoreThanTwice = !deniedPermissions.all {
-            // shouldShowRequestPermissionRationale :
-            //   명시적으로 사용자가 권한을 거부한 경우 true
-            //   권한 요청이 처음이거나, 다시 묻지 않음을 선택한 경우, 권한을 허용한 경우 false
-            // 해당 위치에서는 수락시 해당 코드 블럭이 실행 되지 않음.
-            // 처음 거부시 true, 2번 이상 거부시 false
             shouldShowRequestPermissionRationale(activity, it)
         }
 

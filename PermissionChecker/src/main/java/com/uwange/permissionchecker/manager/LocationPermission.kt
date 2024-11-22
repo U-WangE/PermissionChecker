@@ -1,5 +1,6 @@
 package com.uwange.permissionchecker.manager
 
+import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.uwange.permissionchecker.LocationType
@@ -14,12 +15,14 @@ class LocationPermission(private val activity: AppCompatActivity): PermissionChe
         return locationCheckAndRequest?.checkGrant(permissions) ?: PermissionResponse(false, "Permission Checker not initialized.")
     }
 
-    override fun requestPermissions(type: Type, launcher: ActivityResultLauncher<Array<String>>) {
+    override fun requestPermissions(type: Type?, launcher: ActivityResultLauncher<Array<String>>, intentLauncher: ActivityResultLauncher<Intent>) {
         if (type in listOf(LocationType.Location)) {
-            locationCheckAndRequest = LocationCheckAndRequest(activity, type)
-            locationCheckAndRequest?.request(launcher) {
-                resultLiveData?.postValue(it)
-            }
+            type?.let {
+                locationCheckAndRequest = LocationCheckAndRequest(activity, it)
+                locationCheckAndRequest?.request(launcher, intentLauncher) { permissionResponse ->
+                    resultLiveData?.postValue(permissionResponse)
+                }
+            }?:resultLiveData?.postValue(PermissionResponse(false, "Permission Type is null.", type))
         }
     }
 }
