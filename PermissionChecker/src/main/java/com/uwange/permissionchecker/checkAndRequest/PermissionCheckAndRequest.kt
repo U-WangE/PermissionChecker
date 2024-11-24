@@ -19,7 +19,14 @@ internal abstract class PermissionCheckAndRequest(
 ) {
     internal abstract fun getPermissions(): Array<String>
     internal abstract fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean?
-// 권한 전체가 처음 요청 중인지 판단하는 perference만 있으면 될듯
+    internal abstract fun handlePermissionLauncher(permissions: Array<String>, launcher: ActivityResultLauncher<Array<String>>)
+    internal open fun handlePermissionDeniedMoreThanTwice(intentLauncher: ActivityResultLauncher<Intent>) {
+        intentLauncher.launch(Intent().apply {
+            action = ACTION_APPLICATION_DETAILS_SETTINGS
+            data = Uri.fromParts("package", activity.packageName, null)
+        })
+    }
+
     internal fun request(
         launcher: ActivityResultLauncher<Array<String>>,
         intentLauncher: ActivityResultLauncher<Intent>,
@@ -46,12 +53,9 @@ internal abstract class PermissionCheckAndRequest(
             // 2회 이상 거부 됐고, 직전 권한 요청 방식이 Intent Launcher 가 아닌 경우 실행
             isDeniedMoreThanTwice && !permissionCheckerPreference.checkFirstTime && !permissionCheckerPreference.lastActionIsIntentLauncher -> {
                 //TODO:: 각 권한에 따라 처리 로직 필요
-                intentLauncher.launch(Intent().apply {
-                    action = ACTION_APPLICATION_DETAILS_SETTINGS
-                    data = Uri.fromParts("package", activity.packageName, null)
-                })
+                handlePermissionDeniedMoreThanTwice(intentLauncher)
             }
-            else -> launcher.launch((permissions))
+            else -> handlePermissionLauncher(permissions, launcher)
         }
     }
 

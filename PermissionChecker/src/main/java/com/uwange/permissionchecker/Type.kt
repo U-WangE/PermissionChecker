@@ -6,6 +6,6 @@ sealed interface Type {
     }
 
     enum class LocationType : Type {
-        Location
+        Location, LocationAlways
     }
 }

@@ -1,6 +1,7 @@
 package com.uwange.permissionchecker.tool
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.uwange.permissionchecker.PermissionResponse
@@ -18,8 +19,8 @@ internal class LocationPermission(
     }
 
     override fun requestPermissions(type: Type?, launcher: ActivityResultLauncher<Array<String>>, intentLauncher: ActivityResultLauncher<Intent>) {
-        if (type in listOf(Type.LocationType.Location)) {
-            type?.let {
+        if (type is Type.LocationType) {
+            type.let {
                 locationCheckAndRequest = LocationCheckAndRequest(activity, it)
                 locationCheckAndRequest?.request(launcher, intentLauncher) { permissionResponse ->
                     resultLiveData?.postValue(permissionResponse)

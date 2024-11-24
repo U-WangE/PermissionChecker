@@ -8,7 +8,10 @@ import android.Manifest.permission.BLUETOOTH_ADVERTISE
 import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.Manifest.permission.BLUETOOTH_SCAN
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
+import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import com.uwange.permissionchecker.Type
 
 internal class BluetoothCheckAndRequest(
@@ -86,6 +89,21 @@ internal class BluetoothCheckAndRequest(
                             permissions[ACCESS_COARSE_LOCATION] == true
             }
             else -> null
+        }
+    }
+
+    override fun handlePermissionLauncher(
+        permissions: Array<String>,
+        launcher: ActivityResultLauncher<Array<String>>
+    ) {
+//        TODO("Not yet implemented")
+        launcher.launch(permissions)
+    }
+
+    override fun handlePermissionDeniedMoreThanTwice(intentLauncher: ActivityResultLauncher<Intent>) {
+        when (type) {
+//             TODO::특벌 Setting 처리가 있다면, 해당 위치에서 처리
+            else -> super.handlePermissionDeniedMoreThanTwice(intentLauncher)
         }
     }
 }

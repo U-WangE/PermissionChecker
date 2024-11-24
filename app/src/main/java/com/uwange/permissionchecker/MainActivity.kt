@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
             val permissionViews: Array<Triple<IncludeItemBinding, String, Type?>> =
                 arrayOf(
                     Triple(permission1, "Location Permission", Type.LocationType.Location),
-                    Triple(permission2, "Bluetooth Permission", Type.BluetoothType.Bluetooth),
-                    Triple(permission3, "Bluetooth Scan Permission", Type.BluetoothType.BluetoothScan),
-                    Triple(permission4, "Bluetooth Connect Permission", Type.BluetoothType.BluetoothConnect),
-                    Triple(permission5, "Bluetooth Advertise Permission", Type.BluetoothType.BluetoothAdvertise),
-                    Triple(permission6, "BluetoothALL Permission", Type.BluetoothType.BluetoothALL),
-                    Triple(permission7, "- Permission", null),
+                    Triple(permission2, "LocationAlways Permission", Type.LocationType.LocationAlways),
+                    Triple(permission3, "Bluetooth Permission", Type.BluetoothType.Bluetooth),
+                    Triple(permission4, "Bluetooth Scan Permission", Type.BluetoothType.BluetoothScan),
+                    Triple(permission5, "Bluetooth Connect Permission", Type.BluetoothType.BluetoothConnect),
+                    Triple(permission6, "Bluetooth Advertise Permission", Type.BluetoothType.BluetoothAdvertise),
+                    Triple(permission7, "BluetoothALL Permission", Type.BluetoothType.BluetoothALL),
                     Triple(permission8, "- Permission", null)
                 )
 

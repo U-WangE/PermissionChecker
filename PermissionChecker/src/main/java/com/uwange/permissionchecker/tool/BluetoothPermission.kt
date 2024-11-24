@@ -18,14 +18,8 @@ internal class BluetoothPermission(
     }
 
     override fun requestPermissions(type: Type?, launcher: ActivityResultLauncher<Array<String>>, intentLauncher: ActivityResultLauncher<Intent>) {
-        if (type in listOf(
-                Type.BluetoothType.Bluetooth,
-                Type.BluetoothType.BluetoothScan,
-                Type.BluetoothType.BluetoothConnect,
-                Type.BluetoothType.BluetoothAdvertise,
-                Type.BluetoothType.BluetoothALL
-            )) {
-            type?.let {
+        if (type is Type.BluetoothType) {
+            type.let {
                 bluetoothCheckAndRequest = BluetoothCheckAndRequest(activity, it)
                 bluetoothCheckAndRequest?.request(launcher, intentLauncher) { permissionResponse ->
                     resultLiveData?.postValue(permissionResponse)
