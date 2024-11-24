@@ -1,4 +1,4 @@
-package com.uwange.permissionchecker.manager
+package com.uwange.permissionchecker.tool
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
@@ -6,10 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 import com.uwange.permissionchecker.checkAndRequest.LocationCheckAndRequest
+import com.uwange.permissionchecker.manager.PermissionChecker.Companion.resultLiveData
 
-class LocationPermission(
+internal class LocationPermission(
     private val activity: AppCompatActivity
-): PermissionChecker(activity) {
+): PermissionTool {
     private var locationCheckAndRequest: LocationCheckAndRequest? = null
 
     override fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
