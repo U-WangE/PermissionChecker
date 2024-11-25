@@ -19,7 +19,9 @@ internal abstract class PermissionCheckAndRequest(
 ) {
     internal abstract fun getPermissions(): Array<String>
     internal abstract fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean?
-    internal abstract fun handlePermissionLauncher(permissions: Array<String>, launcher: ActivityResultLauncher<Array<String>>)
+    internal open fun handlePermissionLauncher(permissions: Array<String>, launcher: ActivityResultLauncher<Array<String>>) {
+        launcher.launch(permissions)
+    }
     internal open fun handlePermissionDeniedMoreThanTwice(intentLauncher: ActivityResultLauncher<Intent>) {
         intentLauncher.launch(Intent().apply {
             action = ACTION_APPLICATION_DETAILS_SETTINGS

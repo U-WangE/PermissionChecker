@@ -43,7 +43,7 @@ internal class LocationCheckAndRequest(
     ) {
         when (type) {
             Type.LocationType.Location -> {
-                launcher.launch(permissions)
+                super.handlePermissionLauncher(permissions, launcher)
             }
             Type.LocationType.LocationAlways -> {
                 val locationPermissions = listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
@@ -52,19 +52,13 @@ internal class LocationCheckAndRequest(
                     activity.checkSelfPermission(it) == PERMISSION_GRANTED
                 }
                 if (isPermissionGranted)
-                    launcher.launch(permissions)
+                    super.handlePermissionLauncher(permissions, launcher)
                 else
                     resultLiveData?.postValue(PermissionResponse(false, "$type First you need to declare location permissions", type, listOf(), locationPermissions))
             }
             else -> {
                 resultLiveData?.postValue(PermissionResponse(false, "$type Permission Type Miss Match", type))
             }
-        }
-    }
-
-    override fun handlePermissionDeniedMoreThanTwice(intentLauncher: ActivityResultLauncher<Intent>) {
-        when (type) {
-            else -> super.handlePermissionDeniedMoreThanTwice(intentLauncher)
         }
     }
 }

@@ -48,9 +48,9 @@ class MainActivity : AppCompatActivity() {
                 try {
                     triple.first.tvName.text = triple.second
                     triple.first.root.setOnClickListener {
-                        if (index == 0) {
+                        if (index >= 0 && index <= 1) {
                             selectMasking(triple.first, triple.third)
-                        } else if (index >= 1 && index <= 5) {
+                        } else if (index >= 2 && index <= 6) {
                             selectMasking(triple.first, triple.third)
                         }else {}
                     }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     fun requestPermission() {
         permissionChecker.result {
-            Log.d("BLUETOOTH", it.toString())
+            Log.d(type.toString(), it.toString())
             type = null
         }
 
