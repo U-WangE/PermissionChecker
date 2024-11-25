@@ -1,4 +1,4 @@
-package com.uwange.permissionchecker
+package com.uwange.app
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

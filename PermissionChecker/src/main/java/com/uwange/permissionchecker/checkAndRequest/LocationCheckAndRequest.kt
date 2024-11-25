@@ -4,7 +4,6 @@ import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.activity.result.ActivityResultLauncher
 import com.uwange.permissionchecker.PermissionResponse

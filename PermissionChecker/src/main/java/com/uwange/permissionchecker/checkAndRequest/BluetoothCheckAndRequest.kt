@@ -11,9 +11,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.uwange.permissionchecker.Type
 

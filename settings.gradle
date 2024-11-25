@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PermissionChecker"
+rootProject.name = "PermissionCheckerApp"
 include ':app'
 include ':PermissionChecker'

@@ -23,7 +23,7 @@
         android:theme="@style/Theme.PermissionChecker"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.uwange.app.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

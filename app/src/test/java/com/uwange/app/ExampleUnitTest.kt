@@ -1,4 +1,4 @@
-package com.uwange.permissionchecker
+package com.uwange.app
 
 import org.junit.Test
 

@@ -1,7 +1,6 @@
 package com.uwange.permissionchecker.tool
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.uwange.permissionchecker.PermissionResponse
