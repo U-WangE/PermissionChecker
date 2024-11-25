@@ -3,9 +3,10 @@ package com.uwange.app
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.uwange.app.databinding.IncludeItemBinding
 import com.uwange.permissionchecker.Type
 import com.uwange.app.databinding.ActivityMainBinding
@@ -16,10 +17,12 @@ class MainActivity : AppCompatActivity() {
 
     private var type: Type? = null
 
-    private var bluetoothSelectedView: TextView? = null
-    private var locationSelectedView: TextView? = null
+
+    private val permissionViews: MutableList<Triple<IncludeItemBinding, String, Type?>> = mutableListOf()
+    private var selectedView: TextView? = null
 
     private lateinit var permissionChecker: PermissionChecker
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,48 +31,12 @@ class MainActivity : AppCompatActivity() {
 
         permissionChecker = PermissionChecker(this)
 
+        testPermissionChecker()
+
         setUI()
-        requestPermission()
     }
 
-    fun setUI() {
-        with(binding) {
-            val permissionViews: Array<Triple<IncludeItemBinding, String, Type?>> =
-                arrayOf(
-                    Triple(permission1, "Location Permission", Type.LocationType.Location),
-                    Triple(permission2, "LocationAlways Permission",
-                        Type.LocationType.LocationAlways
-                    ),
-                    Triple(permission3, "Bluetooth Permission", Type.BluetoothType.Bluetooth),
-                    Triple(permission4, "Bluetooth Scan Permission",
-                        Type.BluetoothType.BluetoothScan
-                    ),
-                    Triple(permission5, "Bluetooth Connect Permission",
-                        Type.BluetoothType.BluetoothConnect
-                    ),
-                    Triple(permission6, "Bluetooth Advertise Permission",
-                        Type.BluetoothType.BluetoothAdvertise
-                    ),
-                    Triple(permission7, "BluetoothALL Permission", Type.BluetoothType.BluetoothALL),
-                    Triple(permission8, "- Permission", null)
-                )
-
-            permissionViews.forEachIndexed { index, triple ->
-                try {
-                    triple.first.tvName.text = triple.second
-                    triple.first.root.setOnClickListener {
-                        if (index in 0..6)
-                            selectMasking(triple.first, triple.third)
-                        else {}
-                    }
-                } catch (e:Exception) {
-                    Log.e("Matching Failure", e.toString())
-                }
-            }
-        }
-    }
-
-    fun requestPermission() {
+    private fun testPermissionChecker() {
         permissionChecker.result {
             Log.i(type.toString(), it.toString())
             type = null
@@ -80,37 +47,52 @@ class MainActivity : AppCompatActivity() {
                 permissionChecker.request(it)
             }
 
-            bluetoothSelectedView?.isSelected = false
-            locationSelectedView?.isSelected = false
-            bluetoothSelectedView = null
-            locationSelectedView = null
+            selectedView?.isSelected = false
+            selectedView = null
         }
     }
 
-    fun selectMasking(view: IncludeItemBinding, type: Type?) {
+    fun setUI() {
+        with(binding) {
+            addReferenceView("Location Permission", Type.LocationType.Location)
+            addReferenceView("LocationAlways Permission", Type.LocationType.LocationAlways)
+            addReferenceView("Bluetooth Permission", Type.BluetoothType.Bluetooth)
+            addReferenceView("Bluetooth Scan Permission", Type.BluetoothType.BluetoothScan)
+            addReferenceView("Bluetooth Connect Permission", Type.BluetoothType.BluetoothConnect)
+            addReferenceView("Bluetooth Advertise Permission", Type.BluetoothType.BluetoothAdvertise)
+            addReferenceView("BluetoothALL Permission", Type.BluetoothType.BluetoothALL)
+
+        }
+    }
+
+    private fun addReferenceView(name: String, type: Type) {
+        val includeView =
+            IncludeItemBinding.inflate(LayoutInflater.from(this), binding.main, false)
+                .apply {
+                    root.id = View.generateViewId()
+                    tvName.text = name
+                    root.setOnClickListener {
+                        selectMasking(this, type)
+                    }
+                }
+
+        permissionViews.add(Triple(includeView, name, type))
+        binding.root.addView(includeView.root)
+        binding.flLayout.referencedIds += includeView.root.id
+    }
+
+    private fun selectMasking(view: IncludeItemBinding, type: Type?) {
         if (!view.tvNumber.isSelected) {
             view.tvNumber.isSelected = true
         } else {
             view.tvNumber.isSelected = false
         }
 
-        when (type) {
-            is Type.LocationType -> {
-                if (locationSelectedView != view.tvNumber)
-                    locationSelectedView?.isSelected = false
+        if (selectedView != view.tvNumber)
+            selectedView?.isSelected = false
 
-                locationSelectedView = view.tvNumber
-                this.type = type
-            }
-            is Type.BluetoothType -> {
-                if (bluetoothSelectedView != view.tvNumber)
-                    bluetoothSelectedView?.isSelected = false
-
-                bluetoothSelectedView = view.tvNumber
-                this.type = type
-            }
-            else -> return
-        }
+        selectedView = view.tvNumber
+        this.type = type
     }
 
     fun alert(callback:(Boolean) -> Unit): AlertDialog {

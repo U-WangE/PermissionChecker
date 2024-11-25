@@ -23,77 +23,12 @@
         android:id="@+id/fl_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="permission_1, permission_2, permission_3, permission_4, permission_5, permission_6, permission_7, permission_8"
         app:flow_wrapMode="aligned"
         app:flow_horizontalStyle="spread_inside"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
-        />
-
-    <include
-        android:id="@+id/permission_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
-        />
-
-    <include
-        android:id="@+id/permission_8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/include_item"
-        tools:ignore="MissingConstraints"
         />
 
     <androidx.appcompat.widget.AppCompatButton
