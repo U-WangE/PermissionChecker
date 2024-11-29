@@ -16,16 +16,16 @@ internal class ETCCheckAndRequest(
     private val type: Type
 ): PermissionCheckAndRequest(activity, type) {
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(): List<String> {
         return when (type) {
             Type.ETCType.Overlay -> {
-                arrayOf(SYSTEM_ALERT_WINDOW)
+                listOf(SYSTEM_ALERT_WINDOW)
             }
-            else -> emptyArray()
+            else -> emptyList()
         }
     }
 
-    override fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean? {
+    override fun isPermissionsGranted(permissions: List<String>): Boolean? {
         return when (type) {
             Type.ETCType.Overlay -> {
                 Settings.canDrawOverlays(activity)
@@ -34,7 +34,7 @@ internal class ETCCheckAndRequest(
         }
     }
 
-    override fun checkAllPermission(permissions: Array<String>): Boolean {
+    override fun checkAllPermission(permissions: List<String>): Boolean {
         return when (type) {
             Type.ETCType.Overlay -> Settings.canDrawOverlays(activity)
             else -> super.checkAllPermission(permissions)
@@ -42,7 +42,7 @@ internal class ETCCheckAndRequest(
     }
 
     // isDeniedMoreThanTwice : "처음 요청" 또는 "2번 이상 거부시 true" 또는 "권한 전부 수락시", "처음 거부시" false,
-    override fun checkDeniedMoreThanTwice(permissions: Array<String>): Boolean {
+    override fun checkDeniedMoreThanTwice(permissions: List<String>): Boolean {
         return when (type) {
             Type.ETCType.Overlay -> {
                 false
@@ -52,7 +52,7 @@ internal class ETCCheckAndRequest(
     }
 
     override fun handleLauncher(
-        permissions: Array<String>,
+        permissions: List<String>,
         launcher: ActivityResultLauncher<Array<String>>,
         intentLauncher: ActivityResultLauncher<Intent>
     ) {

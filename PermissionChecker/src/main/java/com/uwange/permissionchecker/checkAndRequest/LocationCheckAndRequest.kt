@@ -6,7 +6,6 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.activity.result.ActivityResultLauncher
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 import com.uwange.permissionchecker.manager.PermissionChecker.Companion.resultLiveData
@@ -16,29 +15,16 @@ internal class LocationCheckAndRequest(
     private val type: Type
 ): PermissionCheckAndRequest(activity, type) {
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(): List<String> {
         return when (type) {
-            Type.LocationType.Location -> arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-            Type.LocationType.LocationAlways -> arrayOf(ACCESS_BACKGROUND_LOCATION)
-            else -> emptyArray()
-        }
-    }
-
-    override fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean? {
-        return when (type) {
-            Type.LocationType.Location -> {
-                permissions[ACCESS_FINE_LOCATION] == true &&
-                        permissions[ACCESS_COARSE_LOCATION] == true
-            }
-            Type.LocationType.LocationAlways -> {
-                permissions[ACCESS_BACKGROUND_LOCATION] == true
-            }
-            else -> null
+            Type.LocationType.Location -> listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+            Type.LocationType.LocationAlways -> listOf(ACCESS_BACKGROUND_LOCATION)
+            else -> emptyList()
         }
     }
 
     override fun launchLauncher(
-        permissions: Array<String>,
+        permissions: List<String>,
         launcher: ActivityResultLauncher<Array<String>>
     ) {
         when (type) {

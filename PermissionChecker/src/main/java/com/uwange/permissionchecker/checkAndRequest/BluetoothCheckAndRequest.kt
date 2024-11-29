@@ -13,85 +13,44 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import com.uwange.permissionchecker.PermissionCheckerUtil.checkPermissionGranted
 import com.uwange.permissionchecker.Type
 
 internal class BluetoothCheckAndRequest(
     private val activity: Activity,
     private val type: Type
 ): PermissionCheckAndRequest(activity, type) {
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(): List<String> {
         return when (type) {
-            Type.BluetoothType.Bluetooth -> arrayOf(BLUETOOTH)
+            Type.BluetoothType.Bluetooth -> listOf(BLUETOOTH)
             Type.BluetoothType.BluetoothScan -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH_SCAN)
+                    listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH_SCAN)
                 else
-                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH, BLUETOOTH_ADMIN)
+                    listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH, BLUETOOTH_ADMIN)
             }
             Type.BluetoothType.BluetoothConnect -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    arrayOf(BLUETOOTH_CONNECT)
+                    listOf(BLUETOOTH_CONNECT)
                 else
-                    arrayOf(BLUETOOTH, BLUETOOTH_ADMIN)
+                    listOf(BLUETOOTH, BLUETOOTH_ADMIN)
             }
             Type.BluetoothType.BluetoothAdvertise -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    arrayOf(BLUETOOTH_ADVERTISE)
+                    listOf(BLUETOOTH_ADVERTISE)
                 else
-                    arrayOf(BLUETOOTH, BLUETOOTH_ADMIN)
+                    listOf(BLUETOOTH, BLUETOOTH_ADMIN)
             }
             Type.BluetoothType.BluetoothALL -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADVERTISE)
+                    listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADVERTISE)
                 else
-                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH, BLUETOOTH_ADMIN)
+                    listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, BLUETOOTH, BLUETOOTH_ADMIN)
             }
-            else -> emptyArray()
-        }
-    }
-
-    override fun isPermissionsGranted(permissions: Map<String, Boolean>): Boolean? {
-        return when (type) {
-            Type.BluetoothType.Bluetooth -> permissions[BLUETOOTH] == true
-            Type.BluetoothType.BluetoothScan -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    permissions[BLUETOOTH_SCAN] == true &&
-                            permissions[ACCESS_FINE_LOCATION] == true &&
-                            permissions[ACCESS_COARSE_LOCATION] == true
-                else
-                    permissions[BLUETOOTH] == true &&
-                            permissions[BLUETOOTH_ADMIN] == true &&
-                            permissions[ACCESS_FINE_LOCATION] == true &&
-                            permissions[ACCESS_COARSE_LOCATION] == true
-            }
-            Type.BluetoothType.BluetoothConnect -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    permissions[BLUETOOTH_CONNECT] == true
-                else
-                    permissions[BLUETOOTH] == true && permissions[BLUETOOTH_ADMIN] == true
-            }
-            Type.BluetoothType.BluetoothAdvertise -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    permissions[BLUETOOTH_ADVERTISE] == true
-                else
-                    permissions[BLUETOOTH] == true && permissions[BLUETOOTH_ADMIN] == true
-            }
-            Type.BluetoothType.BluetoothALL -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    permissions[BLUETOOTH_SCAN] == true &&
-                            permissions[BLUETOOTH_CONNECT] == true &&
-                            permissions[BLUETOOTH_ADVERTISE] == true &&
-                            permissions[ACCESS_FINE_LOCATION] == true &&
-                            permissions[ACCESS_COARSE_LOCATION] == true
-                else
-                    permissions[BLUETOOTH] == true &&
-                            permissions[BLUETOOTH_ADMIN] == true &&
-                            permissions[ACCESS_FINE_LOCATION] == true &&
-                            permissions[ACCESS_COARSE_LOCATION] == true
-            }
-            else -> null
+            else -> emptyList()
         }
     }
 

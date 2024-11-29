@@ -7,6 +7,6 @@ import com.uwange.permissionchecker.Type
 
 
 internal interface PermissionTool {
-    fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse
+    fun checkGrant(permissions: List<String>): PermissionResponse
     fun requestPermissions(type: Type?, launcher: ActivityResultLauncher<Array<String>>, intentLauncher: ActivityResultLauncher<Intent>)
 }

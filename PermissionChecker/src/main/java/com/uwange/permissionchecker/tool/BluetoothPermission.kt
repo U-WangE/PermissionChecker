@@ -13,7 +13,7 @@ internal class BluetoothPermission(
 ): PermissionTool {
     private var bluetoothCheckAndRequest: BluetoothCheckAndRequest? = null
 
-    override fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
+    override fun checkGrant(permissions: List<String>): PermissionResponse {
         return bluetoothCheckAndRequest?.checkGrant(permissions) ?: PermissionResponse(false, "Permission Checker not initialized.")
     }
 

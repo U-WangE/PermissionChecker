@@ -41,7 +41,7 @@ class PermissionChecker(
             permissionCheckerPreference.lastActionIsIntentLauncher = false
 
             if (::permissionTool.isInitialized)
-                resultLiveData?.postValue(permissionTool.checkGrant(permissions))
+                resultLiveData?.postValue(permissionTool.checkGrant(permissions.keys.toList()))
         }
         intentLauncher = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             // intent 후 permission 상태 체크 하는 방법이 없기 때문에 해당 권한 retry

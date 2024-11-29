@@ -13,7 +13,7 @@ internal class LocationPermission(
 ): PermissionTool {
     private var locationCheckAndRequest: LocationCheckAndRequest? = null
 
-    override fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
+    override fun checkGrant(permissions: List<String>): PermissionResponse {
         return locationCheckAndRequest?.checkGrant(permissions) ?: PermissionResponse(false, "Permission Checker not initialized.")
     }
 

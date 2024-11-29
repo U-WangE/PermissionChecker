@@ -13,7 +13,7 @@ internal class ETCPermission(
 ): PermissionTool {
     private var etcCheckAndRequest: ETCCheckAndRequest? = null
 
-    override fun checkGrant(permissions: Map<String, Boolean>): PermissionResponse {
+    override fun checkGrant(permissions: List<String>): PermissionResponse {
         return etcCheckAndRequest?.checkGrant(permissions) ?: PermissionResponse(false, "Permission Checker not initialized.")
     }
 
