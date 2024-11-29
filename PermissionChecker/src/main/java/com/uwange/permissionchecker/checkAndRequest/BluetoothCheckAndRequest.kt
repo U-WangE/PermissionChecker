@@ -9,10 +9,12 @@ import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.Manifest.permission.BLUETOOTH_SCAN
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
 import androidx.activity.result.ActivityResultLauncher
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.uwange.permissionchecker.Type
 
 internal class BluetoothCheckAndRequest(
@@ -93,14 +95,14 @@ internal class BluetoothCheckAndRequest(
         }
     }
 
-    override fun handlePermissionDeniedMoreThanTwice(intentLauncher: ActivityResultLauncher<Intent>) {
+    override fun launchIntentLauncher(intentLauncher: ActivityResultLauncher<Intent>) {
         try {
             intentLauncher.launch(Intent().apply {
                 action = ACTION_BLUETOOTH_SETTINGS
                 data = Uri.fromParts("package", activity.packageName, null)
             })
         } catch (e: Exception) {
-            super.handlePermissionDeniedMoreThanTwice(intentLauncher)
+            super.launchIntentLauncher(intentLauncher)
         }
     }
 }

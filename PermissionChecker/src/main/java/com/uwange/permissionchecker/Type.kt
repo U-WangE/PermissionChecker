@@ -8,4 +8,8 @@ sealed interface Type {
     enum class LocationType : Type {
         Location, LocationAlways
     }
+
+    enum class ETCType : Type {
+        Overlay
+    }
 }

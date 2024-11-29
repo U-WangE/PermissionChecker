@@ -6,6 +6,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.activity.result.ActivityResultLauncher
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 import com.uwange.permissionchecker.manager.PermissionChecker.Companion.resultLiveData
@@ -36,13 +37,13 @@ internal class LocationCheckAndRequest(
         }
     }
 
-    override fun handlePermissionLauncher(
+    override fun launchLauncher(
         permissions: Array<String>,
         launcher: ActivityResultLauncher<Array<String>>
     ) {
         when (type) {
             Type.LocationType.Location -> {
-                super.handlePermissionLauncher(permissions, launcher)
+                super.launchLauncher(permissions, launcher)
             }
             Type.LocationType.LocationAlways -> {
                 val locationPermissions = listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
@@ -51,7 +52,7 @@ internal class LocationCheckAndRequest(
                     activity.checkSelfPermission(it) == PERMISSION_GRANTED
                 }
                 if (isPermissionGranted)
-                    super.handlePermissionLauncher(permissions, launcher)
+                    super.launchLauncher(permissions, launcher)
                 else
                     resultLiveData?.postValue(PermissionResponse(false, "$type First you need to declare location permissions", type, listOf(), locationPermissions))
             }

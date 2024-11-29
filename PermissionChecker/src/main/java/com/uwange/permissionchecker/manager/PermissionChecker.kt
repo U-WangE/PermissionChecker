@@ -11,6 +11,7 @@ import com.uwange.permissionchecker.PermissionCheckerApp.Companion.permissionChe
 import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
 import com.uwange.permissionchecker.tool.BluetoothPermission
+import com.uwange.permissionchecker.tool.ETCPermission
 import com.uwange.permissionchecker.tool.LocationPermission
 import com.uwange.permissionchecker.tool.PermissionTool
 
@@ -48,7 +49,7 @@ class PermissionChecker(
 
             type?.let {
                 request(it)
-            }?: resultLiveData?.postValue(PermissionResponse(false, "type error", type))
+            }?: resultLiveData?.postValue(PermissionResponse(false, "type error", null))
         }
         PermissionCheckerApp(activity).init()
     }
@@ -62,6 +63,9 @@ class PermissionChecker(
             }
             is Type.LocationType -> {
                 LocationPermission(activity)
+            }
+            is Type.ETCType -> {
+                ETCPermission(activity)
             }
         }
 
