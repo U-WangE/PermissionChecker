@@ -10,10 +10,10 @@ import com.uwange.permissionchecker.PermissionCheckerApp
 import com.uwange.permissionchecker.PermissionCheckerApp.Companion.permissionCheckerPreference
 import com.uwange.permissionchecker.PermissionResponse
 import com.uwange.permissionchecker.Type
-import com.uwange.permissionchecker.tool.BluetoothPermission
-import com.uwange.permissionchecker.tool.ETCPermission
-import com.uwange.permissionchecker.tool.LocationPermission
-import com.uwange.permissionchecker.tool.PermissionTool
+import com.uwange.permissionchecker.checkAndRequest.BluetoothCheckAndRequest
+import com.uwange.permissionchecker.checkAndRequest.ETCCheckAndRequest
+import com.uwange.permissionchecker.checkAndRequest.LocationCheckAndRequest
+import com.uwange.permissionchecker.tool.PermissionTools
 
 class PermissionChecker(
     private val activity: AppCompatActivity
@@ -31,7 +31,7 @@ class PermissionChecker(
         callback?.invoke(resultLiveData?.value?: PermissionResponse(false, "result error"))
     }
 
-    private lateinit var permissionTool: PermissionTool
+    private lateinit var permissionTool: PermissionTools
 
     private var type: Type? = null
 
@@ -57,18 +57,7 @@ class PermissionChecker(
     fun request(type: Type) {
         this.type = type
 
-        permissionTool = when (type) {
-            is Type.BluetoothType -> {
-                BluetoothPermission(activity)
-            }
-            is Type.LocationType -> {
-                LocationPermission(activity)
-            }
-            is Type.ETCType -> {
-                ETCPermission(activity)
-            }
-        }
-
+        permissionTool = PermissionTools(activity)
         permissionTool.requestPermissions(type, launcher, intentLauncher)
     }
 
