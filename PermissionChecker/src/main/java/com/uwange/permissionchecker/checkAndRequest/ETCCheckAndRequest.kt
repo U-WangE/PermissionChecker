@@ -25,19 +25,12 @@ internal class ETCCheckAndRequest(
         }
     }
 
-    override fun isPermissionsGranted(permissions: List<String>): Boolean? {
+    override fun isPermissionsGranted(permissions: List<String>): Boolean {
         return when (type) {
             Type.ETCType.Overlay -> {
                 Settings.canDrawOverlays(activity)
             }
-            else -> null
-        }
-    }
-
-    override fun checkAllPermission(permissions: List<String>): Boolean {
-        return when (type) {
-            Type.ETCType.Overlay -> Settings.canDrawOverlays(activity)
-            else -> super.checkAllPermission(permissions)
+            else -> super.isPermissionsGranted(permissions)
         }
     }
 
@@ -49,6 +42,25 @@ internal class ETCCheckAndRequest(
             }
             else -> false
         }
+    }
+
+    override fun checkPermissions(permissions: List<String>): Pair<List<String>, List<String>> {
+        val granted: ArrayList<String> = arrayListOf()
+        val denied: ArrayList<String> = arrayListOf()
+
+        permissions.all {
+            when (type) {
+                Type.ETCType.Overlay -> {
+                    if (Settings.canDrawOverlays(activity))
+                        granted.add(it)
+                    else
+                        denied.add(it)
+                }
+                else -> false
+            }
+        }
+
+        return Pair(granted.toList(), denied.toList())
     }
 
     override fun handleLauncher(
