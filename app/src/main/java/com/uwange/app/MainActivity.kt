@@ -61,8 +61,10 @@ class MainActivity : AppCompatActivity() {
             addReferenceView("Bluetooth Connect Permission", Type.BluetoothType.BluetoothConnect)
             addReferenceView("Bluetooth Advertise Permission", Type.BluetoothType.BluetoothAdvertise)
             addReferenceView("BluetoothALL Permission", Type.BluetoothType.BluetoothALL)
+            addReferenceView("Write Permission", Type.StorageType.WriteForVerUnder30)
+            addReferenceView("Write Permission", Type.StorageType.ReadWriteForVerUnder30)
+            addReferenceView("Write Permission", Type.StorageType.ReadForVerUnder33)
             addReferenceView("Overlay Permission", Type.ETCType.Overlay)
-
         }
     }
 
